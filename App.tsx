@@ -1,15 +1,10 @@
 import React from 'react';
-// 1. import `NativeBaseProvider` component
-import {
-  NativeBaseProvider,
-  Text,
-  Box,
-  extendTheme,
-  ColorMode,
-} from 'native-base';
+import {NativeBaseProvider, extendTheme, ColorMode} from 'native-base';
 import colorTheme from './src/theme/colorTheme';
 import type {StorageManager} from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NavigationContainer} from '@react-navigation/native';
+import Router from './src/router';
 
 const theme = extendTheme({colors: colorTheme});
 
@@ -26,17 +21,17 @@ export default function App() {
     },
     set: async (value: ColorMode) => {
       try {
-        await AsyncStorage.setItem('@my-app-color-mode', value);
+        await AsyncStorage.setItem('@my-app-color-mode', value as string);
       } catch (e) {
         console.log(e);
       }
     },
   };
   return (
-    <NativeBaseProvider theme={theme} colorModeManager={colorModeManager}>
-      <Box flex={1} bg="#fff" alignItems="center" justifyContent="center">
-        <Text>Open up App.js to start working on your app!</Text>
-      </Box>
-    </NativeBaseProvider>
+    <NavigationContainer>
+      <NativeBaseProvider theme={theme} colorModeManager={colorModeManager}>
+        <Router />
+      </NativeBaseProvider>
+    </NavigationContainer>
   );
 }
